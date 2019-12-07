@@ -1,6 +1,7 @@
 package com.lin.service;
 
 import com.lin.domain.Lin;
+import com.lin.domain.Product;
 import com.lin.domain.User;
 
 import java.util.List;
@@ -52,5 +53,21 @@ public interface IuserService {
 
     //查询用户名是否存在
     public User userNameIsFind(String username);
+
+
+    //模拟硬件数据写到数据库
+    public void writeData();
+
+
+    //调用终端的历史记录
+    public List<Product> findHistoryData(String tableName);
+
+
+    //创建终端数据表
+
+    public void createProductTable(String tableName);
+
+    //删除终端数据表
+    public void dropProductTable(String tableName);
 
 }

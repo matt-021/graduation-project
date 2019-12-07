@@ -22,7 +22,7 @@ public interface IaccountDao {
      @Insert("insert into user (name,password,age,address,email,telephone,n)values(#{name},#{password},#{age},#{address},#{email},#{telephone},#{n})")
      public  void saveUser(User user);
     //向lin1表传uid的值   insert  into lin1 values(null,27,20,null,uid)
-    @Insert("insert  into lin1 values(null,27,20,null,#{uid})")
+    @Insert("insert  into lin1 values(null,27,50,null,#{uid})")
      public void insertLIn1(@Param("uid")Integer n);
 
      //删除用户

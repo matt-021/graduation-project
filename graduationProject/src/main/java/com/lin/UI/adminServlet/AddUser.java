@@ -1,7 +1,9 @@
 package com.lin.UI.adminServlet;
 
+import com.lin.domain.Lin;
 import com.lin.domain.User;
 import com.lin.service.impl.UserService;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,10 +17,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
+import java.util.logging.Logger;
 
 @Controller
 @RequestMapping("/adduser")
 public class AddUser {
+
 
     @Autowired
     public UserService userService;
@@ -37,14 +42,32 @@ public class AddUser {
     //添加用户页面点击提交触发
     @RequestMapping("/add")
     public ModelAndView add(User user){
-        System.out.println(user);
-        //保存用户表  并在lin1表中插入n条语句（即终端有几个，就插入几次）
-         userService.saveUser(user);
-         //获取用户的id  需要进行数据库的查询  根据已有的方法 只能掉用以下的方法进行查询
-       User userNow=userService.login(user.name,user.password);
+        //System.out.println(user);
+        //User{id=null, name='小林', password='123', age='男', address='美国', email='61265', telephone='156', n=3}
+        //保存用户表
 
-        userService.insertLin1(userNow.id);
-        System.out.println(userNow.id);
+        userService.saveUser(user);
+        //获取用户的id  需要进行数据库的查询  根据已有的方法 只能掉用以下的方法进行查询
+        User userNow=userService.login(user.name,user.password);
+        //System.out.println(userNow.id);
+        //并在lin1表中插入n条语句（即终端有几个，就插入几次）
+        for(int i=0;i<user.n;i++) {
+            //logger.info("哈哈");
+            userService.insertLin1(userNow.id);
+
+        }
+        //获取刚才的在lin1表（终端表）插入的数据
+        List<Lin> linList=userService.findAllByUid(userNow.id);
+        for (Lin lin:linList
+             ) {
+            int id=lin.id;
+            int uid=lin.uid;
+            //创建终端的历史数据表 有几个就创建几个数据表 终端历史数据表名的格式是product_uid_id
+            userService.createProductTable("product_"+uid+"_"+id);
+            //System.out.println("创建终端历史数据表了");
+            //System.out.println("product"+uid+id);
+        }
+
         //重新对用户进行查找，并跳转到administrator页面 更新用户信息
         List<User> users=userService.findall();
         ModelAndView modelAndView=new ModelAndView();
@@ -76,22 +99,23 @@ public class AddUser {
     @RequestMapping("/checkUserName")
     @ResponseBody
     public Map<String,Object> checkUserName(String username){
-        System.out.println(username);
+//        System.out.println(username);
+
 
         //.调用service层判断用户名是否存在 返回的是user
         User user=userService.userNameIsFind(username);
-        System.out.println(user);
+        //System.out.println(user);
         Map<String,Object> map = new HashMap<String,Object>();
         //响应回的数据格式：{"userExsit":true,"msg":"此用户名已存在,请更换一个"}
         //                 或者{"userExsit":false,"msg":"用户名可用"}
         if(user!=null){
             //存在
-            System.out.println("存在");
+            //System.out.println("存在");
             map.put("userExsit",true);
             map.put("msg","此用户名已存在,请更换一个");
         }else{
             //不存在
-            System.out.println("不存在");
+            //System.out.println("不存在");
             map.put("userExsit",false);
             map.put("msg","用户名可用");
         }

@@ -42,7 +42,7 @@ public class Login {
         User user = userService.login(name, password);
 
         if (user != null) {
-             if (user.id==1){//id=1 即
+             if (user.getId()==1){//id=1 即
                  //取出数据库的用户表的所有信息
                  List<User> users=userService.findall();
 
@@ -57,13 +57,17 @@ public class Login {
                  return modelAndView;
 
              }else {
+                 //模拟硬件数据写到数据库
+
+                 userService.writeData();
+
                  //普通用户登入，并把该用户的信息放回jsp页面
 
 
                  //根据uid查询终端的所有信息 如果查到的终端数量为0，则jsp页面上如果调用get（）获取数据会报长度为0的索引0越界
                  //目前想到的解决的办法是  判断如何数据为0  则加一个空的javabeen Lin类；
-                 List<Lin> date=userService.findAllByUid(user.id);
-//                 System.out.println("返回的终端集合长度"+date.size());
+                 List<Lin> date=userService.findAllByUid(user.getId());
+                 //System.out.println("首次返回的终端集合数据及长度"+date.size());
                  if(date.size()==0){
                      date.add(new Lin());
                  }

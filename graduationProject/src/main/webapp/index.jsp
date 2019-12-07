@@ -40,6 +40,7 @@
         }
 
 </style>
+
    
   </head>
   <body>
@@ -85,9 +86,14 @@
 </div>
   <footer class="container-fluid">
      
-       <div class="yejiao">
+       <div class="yejiao" id="div3">
            厦门小林物联网科技股份有限公司 版权所有Copyright 2006-2030, All Rights Reserved 闽ICP备16007882
        </div>
+    <script>
+      $("#div3").click(function(){
+        alert("success");
+      });
+    </script>
 
    </footer>
   </body>
